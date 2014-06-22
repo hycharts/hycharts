@@ -51,7 +51,7 @@ class HighChart(object):
         return HTML(div)
 
     @classmethod
-    def line(cls, series_or_df, title='Line', width=600, height=400):
+    def line(cls, series_or_df, title='Line', width=600, height=400, zoom='x'):
         
         if isinstance(series_or_df, pd.DataFrame):
             series = [{'name': series_or_df[c].name, 'data': list(series_or_df[c])} for c in series_or_df]
@@ -62,7 +62,8 @@ class HighChart(object):
             'chart': {
                 'type': 'line',
                 'width': width,
-                'height': height
+                'height': height,
+                'zoomType': zoom
             },
             'title': {
                 'text': title
@@ -77,19 +78,24 @@ class HighChart(object):
                     'text': ''
                 }
             },
-            'series': series
+            'series': series,
+            'tooltip': {
+                'headerFormat': '<b>{series.name}</b>: ',
+                'pointFormat': '({point.x:7.2f}, {point.y:7.2f})'
+            },
         }
         
         return cls(chart)
 
     @classmethod
-    def scatter(cls, x, y, title='Scatter', width=600, height=600, colorbypoint=False):
+    def scatter(cls, x, y, title='Scatter', width=600, height=600, zoom='xy', colorbypoint=False):
         
         chart = {
             'chart': {
                 'type': 'scatter',
                 'width': height,
-                'height': width
+                'height': width,
+                'zoomType': zoom
             },
             'title': {
                 'text': title
@@ -110,7 +116,7 @@ class HighChart(object):
                 'data': zip(x,y),
                 'tooltip': {
                     'headerFormat': '',
-                    'pointFormat': '({point.x:7.2f},{point.y:7.2f})'
+                    'pointFormat': '({point.x:7.2f}, {point.y:7.2f})'
                 },
             }]
         }
