@@ -168,3 +168,49 @@ class HighChart(object):
         }
         
         return cls(chart)
+
+    @classmethod
+    def area(cls, df, title='Area', width=600, height=400, zoom='x', stacking='percent'):
+
+        series = [{'name': df[c].name, 'data': list(df[c])} for c in df]
+
+        chart = {
+            'chart': {
+                'type': 'area',
+                'height': height,
+                'width': width,
+                'zoomType': zoom
+            },
+            'title': {
+                'text': title
+            },
+            'xAxis': {
+                'title': {
+                    'text': ''
+                },
+                'categories': list(df.index)
+            },
+            'yAxis': {
+                'title': {
+                    'text': 'Percent'
+                }
+            },
+            'tooltip': {
+                'pointFormat': '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f})<br/>',
+                'shared': True
+            },
+            'plotOptions': {
+                'area': {
+                    'stacking': stacking,
+                    'lineColor': '#ffffff',
+                    'lineWidth': 1,
+                    'marker': {
+                        'lineWidth': 1,
+                        'lineColor': '#ffffff'
+                    }
+                }
+            },
+            'series': series
+        }
+
+        return cls(chart)
