@@ -155,7 +155,8 @@ class HighChart(object):
                 'colorByPoint': False,
                 'data': list(hist),
                 'tooltip': {
-                    'pointFormat': '{point.y:7.2f}'
+                    'headerFormat': '',
+                    'pointFormat': 'Freq: {point.y:7.2f}'
                 },
             }]
         }
