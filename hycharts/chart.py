@@ -1,4 +1,4 @@
-from IPython.display import HTML, display
+from IPython.display import display, HTML
 
 import string, random
 import json
@@ -6,8 +6,8 @@ import json
 import numpy as np
 import pandas as pd
 
-HEADER_SCRIPTS = ["code.highcharts.com/highcharts.js",
-                  "code.highcharts.com/stock/modules/exporting.js"
+HEADER_SCRIPTS = ["https://code.highcharts.com/highcharts.js",
+                  "https://code.highcharts.com/stock/modules/exporting.js"
                  ]
 
 if __name__ == "__main__":
@@ -15,8 +15,8 @@ if __name__ == "__main__":
     pass
 else:
     # when loaded as module
-    header = ''.join(['<script src="https://{0}" />\n'.format(s) for s in HEADER_SCRIPTS])
-    display(HTML(header))    
+    header = ''.join(['<script src="{0}" />\n'.format(s) for s in HEADER_SCRIPTS])
+    display(HTML(header))
         
 class HighChart(object):
     """Creates a generic HighCharts chart.
@@ -32,7 +32,11 @@ class HighChart(object):
             self.div_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(15))
 
     def draw(self):
-        
+        """Draws HighChart
+
+        Creates a div container and Javascript to display the HighChart instance when called.
+        """
+
         div_id = self.div_id
         chart = self.chart
 
@@ -41,14 +45,17 @@ class HighChart(object):
             Re-run cell if chart is not shown ...
         </div>
         <script>
-            do_chart_%(div_id)s = function() {
-                $('#chart_%(div_id)s').highcharts(%(chart)s);
+            make_chart_%(div_id)s = function() {
+                // create HighCharts instance
+                chart_%(div_id)s =  $('#chart_%(div_id)s').highcharts(%(chart)s);
+                // return chart instance
+                chart_%(div_id)s.highcharts();
             }
-            setTimeout("do_chart_%(div_id)s()", 50)
+            $('#chart_%(div_id)s').ready(make_chart_%(div_id)s());
         </script>
         """ % locals()
         
-        return HTML(div)
+        return display(HTML(div))
 
     @classmethod
     def line(cls, series_or_df, title='Line', width=600, height=400, zoom='x'):
@@ -214,3 +221,9 @@ class HighChart(object):
         }
 
         return cls(chart)
+
+# API syntax sugar
+line = HighChart.line
+scatter = HighChart.scatter
+area = HighChart.area
+hist = HighChart.hist
