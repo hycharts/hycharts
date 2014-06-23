@@ -44,18 +44,14 @@ class HighChart(object):
         <div id="chart_%(div_id)s">
             Re-run cell if chart is not shown ...
         </div>
-        <script>
-            make_chart_%(div_id)s = function() {
-                // create HighCharts instance
-                chart_%(div_id)s =  $('#chart_%(div_id)s').highcharts(%(chart)s);
-                // return chart instance
-                chart_%(div_id)s.highcharts();
-            }
-            $('#chart_%(div_id)s').ready(make_chart_%(div_id)s());
-        </script>
         """ % locals()
         
-        return display(HTML(div))
+        script = """
+            // Create chart in div when ready on page
+            $('#chart_%(div_id)s').ready($('#chart_%(div_id)s').highcharts(%(chart)s));
+        """ % locals()
+
+        return display(HTML(div+'<script>'+script+'</script>'))
 
     @classmethod
     def line(cls, series_or_df, title='Line', width=600, height=400, zoom='x'):
