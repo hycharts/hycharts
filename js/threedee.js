@@ -1,8 +1,8 @@
 
-// console.log('loaded threedee.js');
+console.log('loaded threedee.js');
 
-// Add mouse events for rotation
 function addRotation(chart) {
+    // Add mouse events for rotation
     $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
         e = chart.pointer.normalize(e);
     
@@ -33,6 +33,19 @@ function addRotation(chart) {
             }
         });
     });
-}
 
-// console.log(addRotation)
+    // Give the points a 3D feel by adding a radial gradient
+    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+        return {
+            radialGradient: {
+                cx: 0.4,
+                cy: 0.3,
+                r: 0.5
+            },
+            stops: [
+                [0, color],
+                [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+            ]
+        };
+    });
+}
