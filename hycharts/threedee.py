@@ -1,25 +1,25 @@
 from IPython.display import display, HTML, Javascript
 from hycharts import HighChart
+from hycharts.common import *
 
 HEADER_SCRIPTS = ["https://code.highcharts.com/highcharts-3d.js",
                   "../js/threedee.js"]
 
-if __name__ == "__main__":
-    # when run as a script
-    pass
-else:
+if __name__ == "hycharts.threedee":
     # when loaded as module
-    header = ''.join(['<script src="{0}" />\n'.format(s) for s in HEADER_SCRIPTS])
-    display(HTML(header))
+    display(Javascript(load_scripts(HEADER_SCRIPTS)))
 
 class HighChart3D(HighChart):
 
-    def __init__(self, json_or_dict, div_id=None):
+    def __init__(self, json_or_dict, div_id=None, rotation=False):
         super(HighChart3D, self).__init__(json_or_dict, div_id)
+        self.rotation = rotation
 
     @classmethod    
-    def scatter3d(cls, x, y, z, title='Scatter', width=600, height=600, depth=300, zoom=None, colorbypoint=False):
-        
+    def scatter3d(cls, x, y, z, title='Scatter', 
+                  width=600, height=600, depth=300, 
+                  zoom=None, colorbypoint=False, rotation=True):
+
         chart = {
             'chart': {
                 'type': 'scatter',
@@ -74,10 +74,10 @@ class HighChart3D(HighChart):
             }]
         }
         
-        return cls(chart)
+        return cls(chart, rotation=rotation)
         
 
-    def draw(self, rotation=True):
+    def draw(self):
         """Draws HighChart
 
         Creates a div container and Javascript to display the HighChart instance when called.
@@ -97,7 +97,7 @@ class HighChart3D(HighChart):
             $('#chart_%(div_id)s').ready($('#chart_%(div_id)s').highcharts(%(chart)s));
         """ % locals()
 
-        if rotation:
+        if self.rotation:
             script += """
                // Add rotation to chart
                $('#chart_%(div_id)s').ready(

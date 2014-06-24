@@ -1,4 +1,5 @@
-from IPython.display import display, HTML
+from IPython.display import display, HTML, Javascript
+from hycharts.common import *
 
 import string, random
 import json
@@ -6,17 +7,13 @@ import json
 import numpy as np
 import pandas as pd
 
-HEADER_SCRIPTS = ["https://code.highcharts.com/highcharts.js",
+HEADER_SCRIPTS = ["https://code.highcharts.com/stock/highstock.js",
                   "https://code.highcharts.com/stock/modules/exporting.js"
                  ]
 
-if __name__ == "__main__":
-    # when run as a script
-    pass
-else:
+if __name__ == "hycharts.chart":
     # when loaded as module
-    header = ''.join(['<script src="{0}" />\n'.format(s) for s in HEADER_SCRIPTS])
-    display(HTML(header))
+    display(Javascript(load_scripts(HEADER_SCRIPTS)))
         
 class HighChart(object):
     """Creates a generic HighCharts chart.
@@ -57,7 +54,7 @@ class HighChart(object):
     def line(cls, series_or_df, title='Line', width=600, height=400, zoom='x'):
         
         if isinstance(series_or_df, pd.DataFrame):
-            series = [{'name': series_or_df[c].name, 'data': list(series_or_df[c])} for c in series_or_df]
+            series = [{'name': series_or_df[c].name, 'data': series_or_df[c].tolist()} for c in series_or_df]
         elif isinstance(series_or_df, pd.Series):
             series = [{'name': series_or_df.name, 'data': list(series_or_df.values)}]
 
@@ -175,7 +172,7 @@ class HighChart(object):
     @classmethod
     def area(cls, df, title='Area', width=600, height=400, zoom='x', stacking='percent'):
 
-        series = [{'name': df[c].name, 'data': list(df[c])} for c in df]
+        series = [{'name': df[c].name, 'data': df[c].tolist()} for c in df]
 
         chart = {
             'chart': {
