@@ -1,9 +1,11 @@
 from IPython.display import display, HTML, Javascript
+import json
 from hycharts import HighChart
 from hycharts.common import *
 
-HEADER_SCRIPTS = ["https://code.highcharts.com/highcharts-3d.js",
-                  "../js/threedee.js"]
+HEADER_SCRIPTS = ["highcharts-3d.js",
+                  "threedee.js"
+                ]
 
 if __name__ == "hycharts.threedee":
     # when loaded as module
@@ -84,7 +86,7 @@ class HighChart3D(HighChart):
         """
 
         div_id = self.div_id
-        chart = self.chart
+        chart = json.dumps(self.chart)
 
         div = """
         <div id="chart_%(div_id)s">

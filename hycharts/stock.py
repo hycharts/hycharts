@@ -1,10 +1,11 @@
 from IPython.display import display, HTML, Javascript
+import json
 from hycharts import HighChart
 from hycharts.common import *
 
 import numpy as np
 
-HEADER_SCRIPTS = ["https://code.highcharts.com/stock/highstock.js"]
+HEADER_SCRIPTS = ["highstock.js"]
 
 if __name__ == "hycharts.stock":
     # when loaded as module
@@ -30,7 +31,7 @@ class HighStock(HighChart):
         """
 
         div_id = self.div_id
-        chart = self.chart
+        chart = json.dumps(self.chart)
 
         div = """
         <div id="chart_%(div_id)s">

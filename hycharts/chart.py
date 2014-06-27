@@ -7,8 +7,8 @@ import json
 import numpy as np
 import pandas as pd
 
-HEADER_SCRIPTS = ["https://code.highcharts.com/stock/highstock.js",
-                  "https://code.highcharts.com/stock/modules/exporting.js"
+HEADER_SCRIPTS = ["highstock.js",
+                  "exporting.js"
                  ]
 
 if __name__ == "hycharts.chart":
@@ -21,9 +21,9 @@ class HighChart(object):
     
     def __init__(self, json_or_dict, div_id=None):
         try:
-            self.chart = json_or_dict + ''
+            self.chart = json.loads(json_or_dict + '')
         except TypeError:
-            self.chart = json.dumps(json_or_dict)
+            self.chart = json_or_dict
 
         if not div_id:
             self.div_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(15))
@@ -35,7 +35,7 @@ class HighChart(object):
         """
 
         div_id = self.div_id
-        chart = self.chart
+        chart = json.dumps(self.chart)
 
         div = """
         <div id="chart_%(div_id)s">
