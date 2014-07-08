@@ -50,13 +50,24 @@ class HighChart(object):
 
         return display(HTML(div+'<script>'+script+'</script>'))
 
+    def to_json(self, path_or_buf=None):
+        if not path_or_buf:
+            return json.dumps(self.chart)
+        else:
+            with open(path_or_buf, 'w') as outfile:
+                json.dump(self.chart, outfile)
+
     @classmethod
-    def line(cls, series_or_df, title='Line', width=600, height=400, zoom='x'):
+    def line(cls, series_or_df, index=None,
+             title='Line', width=600, height=400, zoom='x'):
         
         if isinstance(series_or_df, pd.DataFrame):
-            series = [{'name': series_or_df[c].name, 'data': series_or_df[c].tolist()} for c in series_or_df]
+            series = [{ 'name': series_or_df[c].name, 'data': series_or_df[c].tolist() } for c in series_or_df ]
         elif isinstance(series_or_df, pd.Series):
-            series = [{'name': series_or_df.name, 'data': list(series_or_df.values)}]
+            series = [{ 'name': series_or_df.name, 'data': series_or_df.values.tolist() }]
+
+        if not index:
+            index = series_or_df.index.values.tolist()
 
         chart = {
             'chart': {
@@ -71,7 +82,8 @@ class HighChart(object):
             'xAxis': {
                 'title': {
                     'text': ''
-                }
+                },
+                'categories': index
             },
             'yAxis': {
                 'title': {
